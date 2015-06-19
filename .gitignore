@@ -1,0 +1,3 @@
+examples
+*.gem
+Gemfile.lock
