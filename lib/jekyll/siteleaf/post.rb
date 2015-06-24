@@ -6,10 +6,12 @@ module Jekyll
       def initialize(site, post_hash)
         @site = site
         @_post_hash = post_hash
+
         process(name)
 
+        # This should really happen in 'process', but I dont want to patch more crap.
         if data.key?('date')
-          @date =
+          self.date =
             Utils.parse_date data['date'].to_s,
               "Post '#{relative_path}' does not have a valid date in the YAML front matter."
         end

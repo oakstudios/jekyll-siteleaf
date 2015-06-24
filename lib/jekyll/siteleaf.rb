@@ -1,6 +1,7 @@
 require 'jekyll'
 require 'jekyll/siteleaf/site'
 require 'jekyll/siteleaf/post'
+require 'jekyll/siteleaf/page'
 require 'jekyll/siteleaf/reader'
 
 module Jekyll
@@ -29,5 +30,9 @@ module Jekyll
 
   class Post
     prepend Jekyll::Siteleaf::Post
+  end
+
+  class Page
+    prepend Jekyll::Siteleaf::Page
   end
 end

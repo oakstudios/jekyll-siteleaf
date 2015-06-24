@@ -2,6 +2,8 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require 'pry'
 
+require 'jekyll/siteleaf'
+
 class MockSite
   # A Jekyll::Site to satisfy our tests
   attr_reader :config

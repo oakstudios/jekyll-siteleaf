@@ -1,5 +1,4 @@
 require 'helper'
-require 'jekyll/siteleaf'
 
 class TestReader < Minitest::Test
   attr_reader :reader
