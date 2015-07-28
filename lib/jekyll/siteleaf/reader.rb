@@ -61,8 +61,10 @@ module Jekyll
       end
 
       def retrieve_collections
-        # TODO
-        # Reads collections specified in the site config
+        site.collections +=
+          Siteleaf.collection_reader
+                  .call(site)
+                  .map { |x| Jekyll::Collection.new(site, x) }
       end
     end
   end

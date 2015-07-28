@@ -1,6 +1,6 @@
 require 'helper'
 
-class TestSite < Minitest::Test
+class TestPost < Minitest::Test
   attr_reader :site
   def setup
     @site = Jekyll::Siteleaf::Site.new mock_site(_id: 123)

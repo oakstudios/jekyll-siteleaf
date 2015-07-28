@@ -3,6 +3,7 @@ require 'jekyll/siteleaf/site'
 require 'jekyll/siteleaf/post'
 require 'jekyll/siteleaf/page'
 require 'jekyll/siteleaf/reader'
+require 'jekyll/siteleaf/collection'
 
 module Jekyll
   module Siteleaf
@@ -34,5 +35,9 @@ module Jekyll
 
   class Page
     prepend Jekyll::Siteleaf::Page
+  end
+
+  class Collection
+    prepend Jekyll::Siteleaf::Collection
   end
 end
