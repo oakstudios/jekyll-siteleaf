@@ -45,8 +45,11 @@ module Jekyll
       end
 
       def retrieve_pages
-        # TODO
-        # Siteleaf Pages + Siteleaf Assets that have YAML frontmatter
+        # page_reader should also include Siteleaf Assets that have YAML frontmatter
+        site.pages +=
+          Siteleaf.page_reader
+                  .call(site)
+                  .map { |x| Jekyll::Page.new(site, x) }
       end
 
       def retrieve_static_files
