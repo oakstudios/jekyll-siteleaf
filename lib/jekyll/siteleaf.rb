@@ -28,16 +28,4 @@ module Jekyll
   class Reader
     prepend Jekyll::Siteleaf::Reader
   end
-
-  class Post
-    prepend Jekyll::Siteleaf::Post
-  end
-
-  class Page
-    prepend Jekyll::Siteleaf::Page
-  end
-
-  class Collection
-    prepend Jekyll::Siteleaf::Collection
-  end
 end

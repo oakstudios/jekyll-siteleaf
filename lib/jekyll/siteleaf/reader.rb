@@ -46,7 +46,7 @@ module Jekyll
 
       def retrieve_pages
         # page_reader should also include Siteleaf Assets that have YAML frontmatter
-        site.pages +=
+        site.pages =
           Siteleaf.page_reader
                   .call(site)
                   .map { |x| Jekyll::Page.new(site, x) }
@@ -64,7 +64,7 @@ module Jekyll
       end
 
       def retrieve_collections
-        site.collections +=
+        site.collections =
           Siteleaf.collection_reader
                   .call(site)
                   .map { |x| Jekyll::Collection.new(site, x) }

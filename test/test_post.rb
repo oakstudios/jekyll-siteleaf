@@ -7,54 +7,54 @@ class TestPost < Minitest::Test
   end
 
   def test_initialize__process_name
-    post = Jekyll::Post.new site, 'name' => '2015-06-15-foo-bar.derp'
+    post = Jekyll::Siteleaf::Post.new site, 'name' => '2015-06-15-foo-bar.derp'
     assert_equal Time.parse('2015-06-15').localtime, post.date
     assert_equal 'foo-bar', post.slug
     assert_equal '.derp', post.ext
   end
 
   def test_date__from_data
-    post = Jekyll::Post.new site,
+    post = Jekyll::Siteleaf::Post.new site,
       'name' => '2015-06-15-foo-bar.md',
       'data' => {'date' => '2015-06-20'}
     assert_equal Time.parse('2015-06-20').localtime, post.date
   end
 
   def test_name
-    post = Jekyll::Post.new site, 'name' => '2015-06-15-foo-bar.md'
+    post = Jekyll::Siteleaf::Post.new site, 'name' => '2015-06-15-foo-bar.md'
     assert_equal '2015-06-15-foo-bar.md', post.name
   end
 
   def test_content
-    post = Jekyll::Post.new site,
+    post = Jekyll::Siteleaf::Post.new site,
       'name' => '2015-06-15-foo-bar.md',
       'content' =>  'foo bar'
     assert_equal 'foo bar', post.content
   end
 
   def test_categories
-    post = Jekyll::Post.new site,
+    post = Jekyll::Siteleaf::Post.new site,
       'name' => '2015-06-15-foo-bar.md',
-      'categories' =>  %w[fizz bang]
+      'data' => { 'categories' =>  %w[fizz bang] }
     assert_equal %w[fizz bang], post.categories
   end
 
   def test_tags
-    post = Jekyll::Post.new site,
+    post = Jekyll::Siteleaf::Post.new site,
       'name' => '2015-06-15-foo-bar.md',
-      'tags' => %w[cool trending]
+      'data' => { 'tags' => %w[cool trending] }
     assert_equal %w[cool trending], post.tags
   end
 
   def test_data
-    post = Jekyll::Post.new site,
+    post = Jekyll::Siteleaf::Post.new site,
       'name' => '2015-06-15-foo-bar.md',
       'data' => { 'ping' => 'pong' }
     assert_equal({ 'ping' => 'pong' }, post.data)
   end
 
   def test_data__default_proc
-    post = Jekyll::Post.new site, 'name' => '2015-06-15-foo-bar.md'
+    post = Jekyll::Siteleaf::Post.new site, 'name' => '2015-06-15-foo-bar.md'
     site.frontmatter_defaults = Minitest::Mock.new
     site.frontmatter_defaults.expect(:find, 'bar', [post.relative_path, post.type, 'foo'])
 
@@ -66,7 +66,7 @@ class TestPost < Minitest::Test
     # Jekyll requires all of this extra crap for generating exceprts :shrug:
     site.permalink_style = :none
     site.converters = []
-    post = Jekyll::Post.new site,
+    post = Jekyll::Siteleaf::Post.new site,
       'name' => '2015-06-15-foo-bar.md',
       'content' => "foo\n\nbar",
       'data' => { 'excerpt_separator' => "\n\n", 'permalink' => 'derp.html' }

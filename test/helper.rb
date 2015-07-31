@@ -8,7 +8,8 @@ class MockSite
   # A Jekyll::Site to satisfy our tests
   attr_reader :config
   attr_accessor :posts, :frontmatter_defaults,
-                :permalink_style, :converters
+                :permalink_style, :converters,
+                :pages, :collections
 
   def initialize(config)
     @config = config.clone

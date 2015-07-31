@@ -1,6 +1,6 @@
 module Jekyll
   module Siteleaf
-    module Collection
+    class Collection < Jekyll::Collection
 
       # TODO: Pass documents/files via the collection_hash
 

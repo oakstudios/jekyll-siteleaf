@@ -1,6 +1,6 @@
 module Jekyll
   module Siteleaf
-    module Page
+    class Page < Jekyll::Page
       # Page can be any file with YAML front matter
 
       def initialize(site, page_hash)

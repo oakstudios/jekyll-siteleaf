@@ -1,17 +1,18 @@
 module Jekyll
   module Siteleaf
-    module Post
+    class Post < Jekyll::Post
 
       def initialize(site, post_hash)
         @site    = site
         @name    = post_hash.fetch('name')
         @content = post_hash.fetch('content', '')
-        @tags    = post_hash.fetch('tags', [])
-        @categories = post_hash.fetch('categories', [])
 
         process  name
         set_data post_hash.fetch('data', {})
         set_date data['date'] if data.key?('date')
+
+        @tags       = data.fetch('tags', [])
+        @categories = data.fetch('categories', [])
 
         Jekyll::Hooks.trigger self, :post_init
       end

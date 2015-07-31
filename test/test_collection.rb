@@ -7,24 +7,24 @@ class TestCollection < Minitest::Test
   end
 
   def test_label
-    collection = Jekyll::Collection.new site, 'label' => 'foobar'
+    collection = Jekyll::Siteleaf::Collection.new site, 'label' => 'foobar'
     assert_equal 'foobar', collection.label
   end
 
   def test_label__sanitization
-    collection = Jekyll::Collection.new site, 'label' => '#foobar_-.1'
+    collection = Jekyll::Siteleaf::Collection.new site, 'label' => '#foobar_-.1'
     assert_equal 'foobar_-.1', collection.label
   end
 
   def test_metadata
-    collection = Jekyll::Collection.new site,
+    collection = Jekyll::Siteleaf::Collection.new site,
       'label' => 'foobar',
       'metadata' => { 'fizz' => 'buzz' }
     assert_equal({ 'fizz' => 'buzz' }, collection.metadata)
   end
 
   def test_metadata__default
-    collection = Jekyll::Collection.new site,
+    collection = Jekyll::Siteleaf::Collection.new site,
       'label' => 'foobar'
     assert_equal({}, collection.metadata)
   end

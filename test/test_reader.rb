@@ -15,10 +15,17 @@ class TestReader < Minitest::Test
     Jekyll::Siteleaf.post_reader.expect :call, [], [reader.site]
     Jekyll::Siteleaf.draft_reader = Minitest::Mock.new
     Jekyll::Siteleaf.draft_reader.expect :call, [], [reader.site]
+    Jekyll::Siteleaf.page_reader = Minitest::Mock.new
+    Jekyll::Siteleaf.page_reader.expect :call, [], [reader.site]
+    Jekyll::Siteleaf.collection_reader = Minitest::Mock.new
+    Jekyll::Siteleaf.collection_reader.expect :call, [], [reader.site]
+
 
     reader.read
 
     Jekyll::Siteleaf.post_reader.verify
     Jekyll::Siteleaf.draft_reader.verify
+    Jekyll::Siteleaf.page_reader.verify
+    Jekyll::Siteleaf.collection_reader.verify
   end
 end
