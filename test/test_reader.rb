@@ -20,7 +20,6 @@ class TestReader < Minitest::Test
     Jekyll::Siteleaf.collection_reader = Minitest::Mock.new
     Jekyll::Siteleaf.collection_reader.expect :call, [], [reader.site]
 
-
     reader.read
 
     Jekyll::Siteleaf.post_reader.verify

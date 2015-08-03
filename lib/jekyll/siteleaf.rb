@@ -5,6 +5,8 @@ require 'jekyll/siteleaf/page'
 require 'jekyll/siteleaf/reader'
 require 'jekyll/siteleaf/collection'
 
+require 'forwardable'
+
 module Jekyll
   module Siteleaf
     class << self

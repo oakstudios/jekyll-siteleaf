@@ -34,14 +34,14 @@ module Jekyll
         site.posts =
           Siteleaf.post_reader
                   .call(site)
-                  .map { |x| Jekyll::Post.new(site, x) }
+                  .map { |x| Jekyll::Siteleaf::Post.new(site, x) }
       end
 
       def retrieve_drafts
         site.posts +=
           Siteleaf.draft_reader
                   .call(site)
-                  .map { |x| Jekyll::Draft.new(site, x) }
+                  .map { |x| Jekyll::Siteleaf::Draft.new(site, x) }
       end
 
       def retrieve_pages
@@ -49,7 +49,7 @@ module Jekyll
         site.pages =
           Siteleaf.page_reader
                   .call(site)
-                  .map { |x| Jekyll::Page.new(site, x) }
+                  .map { |x| Jekyll::Siteleaf::Page.new(site, x) }
       end
 
       def retrieve_static_files
@@ -67,7 +67,7 @@ module Jekyll
         site.collections =
           Siteleaf.collection_reader
                   .call(site)
-                  .map { |x| Jekyll::Collection.new(site, x) }
+                  .map { |x| Jekyll::Siteleaf::Collection.new(site, x) }
       end
     end
   end
