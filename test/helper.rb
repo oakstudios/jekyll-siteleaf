@@ -18,9 +18,21 @@ class MockSite
   def show_drafts
     true
   end
+
+  def in_source_dir(*args)
+    source
+  end
 end
 
 class Minitest::Test
+  def default_site_config(config = {})
+    Jekyll::Configuration::DEFAULTS.merge(config)
+  end
+
+  def jekyll_site(config = {})
+    Jekyll::Site.new default_site_config(config)
+  end
+
   def mock_site(_id: nil, config: {})
     MockSite.new(config.merge('_id' => _id))
   end

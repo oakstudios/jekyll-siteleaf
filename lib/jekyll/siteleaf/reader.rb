@@ -16,12 +16,15 @@ module Jekyll
         retrieve_collections
       end
 
-      private
-
-      def sort_files!
-        # TODO: Remove this once retrieve_pages is implemented
-        # We can probably just rely on Jekyll::Reader#sort_files!
+      def static_files
+        @static_files || parse_source_files.last
       end
+
+      def yaml_static_files
+        @yaml_static_files || parse_source_files.first
+      end
+
+      private
 
       def retrieve_layouts
         # TODO
@@ -45,16 +48,19 @@ module Jekyll
       end
 
       def retrieve_pages
-        # page_reader should also include Siteleaf Assets that have YAML frontmatter
         site.pages =
           Siteleaf.page_reader
                   .call(site)
                   .map { |x| Jekyll::Siteleaf::Page.new(site, x) }
+
+        # Include static files with yaml frontmatter
+        site.pages += PageReader.new(site, '').read(yaml_static_files)
       end
 
       def retrieve_static_files
-        # TODO
-        # Siteleaf Assets that don't have YAML frontmatter
+        # Files that don't have YAML frontmatter
+        site.static_files =
+          StaticFileReader.new(site, '').read(static_files)
       end
 
       def retrieve_data
@@ -68,6 +74,16 @@ module Jekyll
           Siteleaf.collection_reader
                   .call(site)
                   .map { |x| Jekyll::Siteleaf::Collection.new(site, x) }
+      end
+
+      def parse_source_files
+        Dir.chdir(site.in_source_dir) do
+          files = Dir.glob('**/{*,.*}').reject { |f| File.directory?(f) }
+          @yaml_static_files, @static_files =
+            filter_entries(files).partition do |file|
+              Utils.has_yaml_header?(file)
+            end
+        end
       end
     end
   end

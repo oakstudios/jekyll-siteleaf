@@ -3,7 +3,9 @@ require 'helper'
 class TestReader < Minitest::Test
   attr_reader :reader
   def setup
-    @reader = Jekyll::Reader.new mock_site(_id: 123)
+    source = File.expand_path('./source', File.dirname(__FILE__))
+    @reader = Jekyll::Reader.new \
+      jekyll_site('source' => source, 'show_drafts' => true)
   end
 
   def test_site
@@ -22,9 +24,28 @@ class TestReader < Minitest::Test
 
     reader.read
 
+    assert_equal %w[
+      /contacts/index.html
+      /css/screen.css
+    ], reader.site.static_files.map(&:relative_path)
+
+    assert_equal %w[
+      .htaccess
+      contacts/bar.html
+      css/main.scss
+    ], reader.site.pages.map(&:name)
+
     Jekyll::Siteleaf.post_reader.verify
     Jekyll::Siteleaf.draft_reader.verify
     Jekyll::Siteleaf.page_reader.verify
     Jekyll::Siteleaf.collection_reader.verify
+  end
+
+  def test_static_files
+    assert_equal %w[contacts/index.html css/screen.css], reader.static_files
+  end
+
+  def test_page_static_files
+    assert_equal %w[contacts/bar.html css/main.scss .htaccess], reader.yaml_static_files
   end
 end
