@@ -27,10 +27,7 @@ module Jekyll
       private
 
       def retrieve_layouts
-        # TODO
-        # Any assets that are in the layouts directory specified
-        # in `site.config['layouts']`
-        # Also needs to satisfy Jekyll::EntryFilter
+        site.layouts = LayoutReader.new(site).read
       end
 
       def retrieve_posts
@@ -64,9 +61,7 @@ module Jekyll
       end
 
       def retrieve_data
-        # TODO
-        # Any .{csv,yml,json} assets that are in the data directroy
-        # specified in `site.config['data_source']`
+        site.data = DataReader.new(site).read(site.config['data_source'])
       end
 
       def retrieve_collections
