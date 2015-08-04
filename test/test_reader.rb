@@ -42,10 +42,17 @@ class TestReader < Minitest::Test
   end
 
   def test_static_files
-    assert_equal %w[contacts/index.html css/screen.css], reader.static_files
+    assert_equal %w[
+      contacts/index.html
+      css/screen.css
+    ], reader.static_files
   end
 
   def test_page_static_files
-    assert_equal %w[contacts/bar.html css/main.scss .htaccess], reader.yaml_static_files
+    assert_equal %w[
+      contacts/bar.html
+      css/main.scss
+      .htaccess
+    ], reader.yaml_static_files
   end
 end

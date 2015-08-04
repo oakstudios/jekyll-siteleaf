@@ -12,12 +12,9 @@ module Jekyll
     class << self
       [
         :collection_reader,
-        :data_reader,
         :draft_reader,
-        :layout_reader,
         :page_reader,
-        :post_reader,
-        :static_file_reader
+        :post_reader
       ].each do |reader|
         attr_writer reader
         define_method reader do
