@@ -69,6 +69,7 @@ module Jekyll
           Siteleaf.collection_reader
                   .call(site)
                   .map { |x| Jekyll::Siteleaf::Collection.new(site, x) }
+                  .each_with_object({}) { |c, h| h[c.label] = c }
       end
 
       def parse_source_files

@@ -1,18 +1,22 @@
 require 'helper'
 
 class TestReader < Minitest::Test
-  attr_reader :reader
+  attr_reader :reader, :site
   def setup
     source = File.expand_path('./source', File.dirname(__FILE__))
-    @reader = Jekyll::Reader.new \
-      jekyll_site('source' => source, 'show_drafts' => true)
+    @site = jekyll_site('source' => source, 'show_drafts' => true)
+    @reader = Jekyll::Reader.new site
   end
 
   def test_site
     assert_instance_of Jekyll::Siteleaf::Site, reader.site
   end
 
+  MockCollection = Struct.new(:label, :docs)
+
   def test_read
+    collection = MockCollection.new('foo', [])
+
     Jekyll::Siteleaf.post_reader = Minitest::Mock.new
     Jekyll::Siteleaf.post_reader.expect :call, [], [reader.site]
     Jekyll::Siteleaf.draft_reader = Minitest::Mock.new
@@ -20,20 +24,22 @@ class TestReader < Minitest::Test
     Jekyll::Siteleaf.page_reader = Minitest::Mock.new
     Jekyll::Siteleaf.page_reader.expect :call, [], [reader.site]
     Jekyll::Siteleaf.collection_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.collection_reader.expect :call, [], [reader.site]
+    Jekyll::Siteleaf.collection_reader.expect :call, [collection], [reader.site]
 
     reader.read
 
     assert_equal %w[
       /contacts/index.html
       /css/screen.css
-    ], reader.site.static_files.map(&:relative_path)
+    ], site.static_files.map(&:relative_path)
 
     assert_equal %w[
       .htaccess
       contacts/bar.html
       css/main.scss
-    ], reader.site.pages.map(&:name)
+    ], site.pages.map(&:name)
+
+    assert site.collections.key?('foo')
 
     Jekyll::Siteleaf.post_reader.verify
     Jekyll::Siteleaf.draft_reader.verify
