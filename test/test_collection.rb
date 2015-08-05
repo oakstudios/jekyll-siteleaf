@@ -1,6 +1,7 @@
 require 'helper'
 
 class TestCollection < Minitest::Test
+  MockDocument = Struct.new(:path)
   MockCollection = Struct.new(:label, :metadata, :docs)
   def collection(label: '', metadata: {}, docs: [])
     MockCollection.new(label, metadata, docs)
@@ -28,15 +29,16 @@ class TestCollection < Minitest::Test
   end
 
   def test_docs
-    # Just assert the delegation. Delegatees responsibility to return Document types.
     got = Jekyll::Siteleaf::Collection.new site,
       collection(docs: [
-        { 'writing' => 'prose' },
-        { 'anything' => 'goes' }
+        MockDocument.new('foo'),
+        MockDocument.new('bar')
       ])
-    assert_equal [
-      { 'writing' => 'prose' },
-      { 'anything' => 'goes' }
-    ], got.docs
+
+    assert_equal %w[foo bar], got.docs.map(&:path)
+
+    got.docs.each do |doc|
+      assert doc.is_a?(Jekyll::Siteleaf::Document)
+    end
   end
 end

@@ -4,6 +4,7 @@ require 'jekyll/siteleaf/post'
 require 'jekyll/siteleaf/page'
 require 'jekyll/siteleaf/reader'
 require 'jekyll/siteleaf/collection'
+require 'jekyll/siteleaf/document'
 
 require 'forwardable'
 
