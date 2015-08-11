@@ -3,7 +3,7 @@ module Jekyll
     class Post < Jekyll::Post
       extend Forwardable
       attr_reader :_post
-      def_delegators :@_post, :name, :content
+      def_delegators :@_post, :name
 
       def initialize(site, _post)
         @site = site
@@ -32,6 +32,10 @@ module Jekyll
 
       def data
         @data ||= @_post.data.dup
+      end
+
+      def content
+        @content ||= @_post.content.dup
       end
 
       def date

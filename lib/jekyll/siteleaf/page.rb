@@ -4,7 +4,7 @@ module Jekyll
       # Page can be any file with YAML front matter
       extend Forwardable
       attr_reader :_page
-      def_delegators :@_page, :name, :content, :source_dir
+      def_delegators :@_page, :name, :source_dir
 
       def initialize(site, _page)
         @site = site
@@ -26,6 +26,10 @@ module Jekyll
 
       def data
         @data ||= @_page.data.dup
+      end
+
+      def content
+        @content ||= @_page.content.dup
       end
     end
   end
