@@ -29,15 +29,15 @@ class TestReader < Minitest::Test
     reader.read
 
     assert_equal %w[
-      /contacts/index.html
-      /css/screen.css
+      contacts/index.html
+      css/screen.css
     ], site.static_files.map(&:relative_path)
 
     assert_equal %w[
-      .htaccess
+      ./.htaccess
       contacts/bar.html
       css/main.scss
-    ], site.pages.map(&:name)
+    ], site.pages.map(&:relative_path)
 
     assert site.collections.key?('foo')
 

@@ -51,13 +51,25 @@ module Jekyll
                   .map { |x| Jekyll::Siteleaf::Page.new(site, x) }
 
         # Include static files with yaml frontmatter
-        site.pages += PageReader.new(site, '').read(yaml_static_files)
+        site.pages +=
+          yaml_static_files.map do |path|
+            page = Jekyll::Page.new site,
+              site.source,
+              File.dirname(path),
+              File.basename(path)
+            page if site.publisher.publish?(page)
+          end.compact
       end
 
       def retrieve_static_files
         # Files that don't have YAML frontmatter
         site.static_files =
-          StaticFileReader.new(site, '').read(static_files)
+          static_files.map do |path|
+            StaticFile.new site,
+              site.source,
+              File.dirname(path),
+              File.basename(path)
+          end
       end
 
       def retrieve_data
