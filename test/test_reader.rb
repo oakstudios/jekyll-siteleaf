@@ -8,8 +8,8 @@ class TestReader < Minitest::Test
     @reader = Jekyll::Reader.new site
   end
 
-  def test_site
-    assert_instance_of Jekyll::Siteleaf::Site, reader.site
+  def test_siteleaf_site
+    assert_instance_of Jekyll::Siteleaf::Site, reader.siteleaf_site
   end
 
   MockCollection = Struct.new(:label, :docs)
@@ -18,13 +18,13 @@ class TestReader < Minitest::Test
     collection = MockCollection.new('foo', [])
 
     Jekyll::Siteleaf.post_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.post_reader.expect :call, [], [reader.site]
+    Jekyll::Siteleaf.post_reader.expect :call, [], [reader.siteleaf_site]
     Jekyll::Siteleaf.draft_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.draft_reader.expect :call, [], [reader.site]
+    Jekyll::Siteleaf.draft_reader.expect :call, [], [reader.siteleaf_site]
     Jekyll::Siteleaf.page_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.page_reader.expect :call, [], [reader.site]
+    Jekyll::Siteleaf.page_reader.expect :call, [], [reader.siteleaf_site]
     Jekyll::Siteleaf.collection_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.collection_reader.expect :call, [collection], [reader.site]
+    Jekyll::Siteleaf.collection_reader.expect :call, [collection], [reader.siteleaf_site]
 
     reader.read
 
