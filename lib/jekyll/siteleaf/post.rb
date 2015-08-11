@@ -3,7 +3,7 @@ module Jekyll
     class Post < Jekyll::Post
       extend Forwardable
       attr_reader :_post
-      def_delegators :@_post, :name, :content, :data
+      def_delegators :@_post, :name, :content
 
       def initialize(site, _post)
         @site = site
@@ -28,6 +28,10 @@ module Jekyll
 
       def categories
         @categories ||= data.fetch('categories', [])
+      end
+
+      def data
+        @data ||= @_post.data.dup
       end
 
       def date
