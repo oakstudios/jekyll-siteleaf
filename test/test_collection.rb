@@ -1,7 +1,7 @@
 require 'helper'
 
 class TestCollection < Minitest::Test
-  MockDocument = Struct.new(:path)
+  MockDocument = Struct.new(:path, :site)
   MockCollection = Struct.new(:label, :metadata, :docs)
   def collection(label: '', metadata: {}, docs: [])
     MockCollection.new(label, metadata, docs)
@@ -9,7 +9,7 @@ class TestCollection < Minitest::Test
 
   attr_reader :site
   def setup
-    @site = Jekyll::Siteleaf::Site.new mock_site(_id: 123)
+    @site = Jekyll::Siteleaf::Site.new jekyll_site(_id: 123)
   end
 
   def test_label
@@ -31,11 +31,11 @@ class TestCollection < Minitest::Test
   def test_docs
     got = Jekyll::Siteleaf::Collection.new site,
       collection(docs: [
-        MockDocument.new('foo'),
-        MockDocument.new('bar')
+        MockDocument.new('foo', site),
+        MockDocument.new('bar', site)
       ])
 
-    assert_equal %w[foo bar], got.docs.map(&:path)
+    assert %w[foo bar], got.docs.map(&:path).map { |x| File.basename(x) }
 
     got.docs.each do |doc|
       assert doc.is_a?(Jekyll::Siteleaf::Document)
