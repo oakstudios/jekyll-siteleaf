@@ -8,7 +8,13 @@ class TestPage < Minitest::Test
 
   attr_reader :site
   def setup
-    @site = Jekyll::Siteleaf::Site.new mock_site(_id: 123)
+    @site = jekyll_site(
+      '_id' => 123,
+      'defaults' => [{
+        'scope' => { 'type' => 'pages' },
+        'values' => { 'foo' => 'bar' }
+      }]
+    )
   end
 
   def test_name
@@ -42,11 +48,6 @@ class TestPage < Minitest::Test
 
   def test_data__default_proc
     got = Jekyll::Siteleaf::Page.new site, page(name: 'my-page.html')
-    site.frontmatter_defaults = Minitest::Mock.new
-    site.frontmatter_defaults.expect(:find, 'bar',
-      [File.join('', got.name), got.type, 'foo'])
-
     assert_equal('bar', got.data['foo'])
-    site.frontmatter_defaults.verify
   end
 end

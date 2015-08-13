@@ -1,12 +1,14 @@
 module Jekyll
   module Siteleaf
-    class Site < SimpleDelegator
+    class Site < Jekyll::Site
+      attr_writer :collections
+
       def id
         config.fetch('_id')
       end
 
-      def collections=(collections)
-        __getobj__.instance_variable_set(:@collections, collections)
+      def reader
+        @_reader ||= Jekyll::Siteleaf::Reader.new(self)
       end
     end
   end

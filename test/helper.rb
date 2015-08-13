@@ -30,10 +30,6 @@ class Minitest::Test
   end
 
   def jekyll_site(config = {})
-    Jekyll::Site.new default_site_config(config)
-  end
-
-  def mock_site(_id: nil, config: {})
-    MockSite.new(config.merge('_id' => _id))
+    Jekyll::Siteleaf::Site.new default_site_config(config)
   end
 end

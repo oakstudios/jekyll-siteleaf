@@ -5,11 +5,11 @@ class TestReader < Minitest::Test
   def setup
     source = File.expand_path('./source', File.dirname(__FILE__))
     @site = jekyll_site('source' => source, 'show_drafts' => true)
-    @reader = Jekyll::Reader.new site
+    @reader = Jekyll::Siteleaf::Reader.new site
   end
 
   def test_siteleaf_site
-    assert_instance_of Jekyll::Siteleaf::Site, reader.siteleaf_site
+    assert_instance_of Jekyll::Siteleaf::Site, reader.site
   end
 
   MockCollection = Struct.new(:label, :docs)
@@ -18,13 +18,13 @@ class TestReader < Minitest::Test
     collection = MockCollection.new('foo', [])
 
     Jekyll::Siteleaf.post_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.post_reader.expect :call, [], [reader.siteleaf_site]
+    Jekyll::Siteleaf.post_reader.expect :call, [], [reader.site]
     Jekyll::Siteleaf.draft_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.draft_reader.expect :call, [], [reader.siteleaf_site]
+    Jekyll::Siteleaf.draft_reader.expect :call, [], [reader.site]
     Jekyll::Siteleaf.page_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.page_reader.expect :call, [], [reader.siteleaf_site]
+    Jekyll::Siteleaf.page_reader.expect :call, [], [reader.site]
     Jekyll::Siteleaf.collection_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.collection_reader.expect :call, [collection], [reader.siteleaf_site]
+    Jekyll::Siteleaf.collection_reader.expect :call, [collection], [reader.site]
 
     reader.read
 

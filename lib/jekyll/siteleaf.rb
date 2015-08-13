@@ -24,8 +24,4 @@ module Jekyll
       end
     end
   end
-
-  class Reader
-    prepend Jekyll::Siteleaf::Reader
-  end
 end

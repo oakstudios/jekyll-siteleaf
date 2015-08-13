@@ -1,10 +1,6 @@
 module Jekyll
   module Siteleaf
-    module Reader
-      def siteleaf_site
-        @siteleaf_site ||= Jekyll::Siteleaf::Site.new(@site)
-      end
-
+    class Reader < Jekyll::Reader
       def read
         retrieve_layouts
         retrieve_posts
@@ -33,21 +29,21 @@ module Jekyll
       def retrieve_posts
         site.posts =
           Siteleaf.post_reader
-                  .call(siteleaf_site)
+                  .call(site)
                   .map { |x| Jekyll::Siteleaf::Post.new(site, x) }
       end
 
       def retrieve_drafts
         site.posts +=
           Siteleaf.draft_reader
-                  .call(siteleaf_site)
+                  .call(site)
                   .map { |x| Jekyll::Siteleaf::Draft.new(site, x) }
       end
 
       def retrieve_pages
         site.pages =
           Siteleaf.page_reader
-                  .call(siteleaf_site)
+                  .call(site)
                   .map { |x| Jekyll::Siteleaf::Page.new(site, x) }
 
         # Include static files with yaml frontmatter
@@ -77,9 +73,9 @@ module Jekyll
       end
 
       def retrieve_collections
-        siteleaf_site.collections =
+        site.collections =
           Siteleaf.collection_reader
-                  .call(siteleaf_site)
+                  .call(site)
                   .map { |x| Jekyll::Siteleaf::Collection.new(site, x) }
                   .each_with_object({}) { |c, h| h[c.label] = c }
       end

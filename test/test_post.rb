@@ -8,7 +8,13 @@ class TestPost < Minitest::Test
 
   attr_reader :site
   def setup
-    @site = Jekyll::Siteleaf::Site.new mock_site(_id: 123)
+    @site = jekyll_site(
+      '_id' => 123,
+      'defaults' => [{
+        'scope' => { 'type' => 'posts' },
+        'values' => { 'foo' => 'bar' }
+      }]
+    )
   end
 
   def test_initialize__process_name
@@ -55,11 +61,7 @@ class TestPost < Minitest::Test
 
   def test_data__default_proc
     got = Jekyll::Siteleaf::Post.new site, post(name: '2015-06-15-foo-bar.md')
-    site.frontmatter_defaults = Minitest::Mock.new
-    site.frontmatter_defaults.expect(:find, 'bar', [got.relative_path, got.type, 'foo'])
-
     assert_equal('bar', got.data['foo'])
-    site.frontmatter_defaults.verify
   end
 
   def test_extracted_excerpt

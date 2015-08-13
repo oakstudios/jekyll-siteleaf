@@ -9,7 +9,7 @@ class TestCollection < Minitest::Test
 
   attr_reader :site
   def setup
-    @site = Jekyll::Siteleaf::Site.new jekyll_site(_id: 123)
+    @site = jekyll_site('_id' => 123)
   end
 
   def test_label
