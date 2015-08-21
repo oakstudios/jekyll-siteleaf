@@ -17,14 +17,14 @@ class TestReader < Minitest::Test
   def test_read
     collection = MockCollection.new('foo', [])
 
-    Jekyll::Siteleaf.post_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.post_reader.expect :call, [], [reader.site]
-    Jekyll::Siteleaf.draft_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.draft_reader.expect :call, [], [reader.site]
-    Jekyll::Siteleaf.page_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.page_reader.expect :call, [], [reader.site]
-    Jekyll::Siteleaf.collection_reader = Minitest::Mock.new
-    Jekyll::Siteleaf.collection_reader.expect :call, [collection], [reader.site]
+    site.post_reader = Minitest::Mock.new
+    site.post_reader.expect :call, [], [reader.site]
+    site.draft_reader = Minitest::Mock.new
+    site.draft_reader.expect :call, [], [reader.site]
+    site.page_reader = Minitest::Mock.new
+    site.page_reader.expect :call, [], [reader.site]
+    site.collection_reader = Minitest::Mock.new
+    site.collection_reader.expect :call, [collection], [reader.site]
 
     reader.read
 
@@ -41,10 +41,10 @@ class TestReader < Minitest::Test
 
     assert site.collections.key?('foo')
 
-    Jekyll::Siteleaf.post_reader.verify
-    Jekyll::Siteleaf.draft_reader.verify
-    Jekyll::Siteleaf.page_reader.verify
-    Jekyll::Siteleaf.collection_reader.verify
+    site.post_reader.verify
+    site.draft_reader.verify
+    site.page_reader.verify
+    site.collection_reader.verify
   end
 
   def test_static_files
