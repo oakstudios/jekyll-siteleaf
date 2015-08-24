@@ -34,12 +34,6 @@ class TestPage < Minitest::Test
     assert_equal 'Cool Story', got.content
   end
 
-  def test_dir
-    got = Jekyll::Siteleaf::Page.new site,
-      page(name: 'my-page.html', source_dir: '/directory/path')
-    assert_equal '/directory/path', got.instance_variable_get(:@dir)
-  end
-
   def test_data
     got = Jekyll::Siteleaf::Page.new site,
       page(name: 'my-page.html', data: { 'ping' => 'pong' })
@@ -48,6 +42,12 @@ class TestPage < Minitest::Test
 
   def test_data__default_proc
     got = Jekyll::Siteleaf::Page.new site, page(name: 'my-page.html')
-    assert_equal('bar', got.data['foo'])
+    assert_equal 'bar', got.data['foo']
+  end
+
+  def test_relative_path
+    got = Jekyll::Siteleaf::Page.new site,
+      page(name: 'my-page.html', source_dir: 'foobar')
+    assert_equal 'foobar/my-page.html', got.relative_path
   end
 end

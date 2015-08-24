@@ -1,6 +1,8 @@
 require 'jekyll'
 require 'jekyll/siteleaf/site'
+require 'jekyll/siteleaf/postable'
 require 'jekyll/siteleaf/post'
+require 'jekyll/siteleaf/draft'
 require 'jekyll/siteleaf/page'
 require 'jekyll/siteleaf/reader'
 require 'jekyll/siteleaf/collection'

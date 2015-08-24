@@ -15,7 +15,7 @@ module Jekyll
         # BUT: Page#dir does depend on @dir via Page#url and Page#url_placeholders
         @dir = source_dir
 
-        process name
+        process @name = name
 
         data.default_proc = proc do |_, key|
           site.frontmatter_defaults.find(File.join(@dir, name), type, key)
