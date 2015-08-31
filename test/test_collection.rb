@@ -1,12 +1,6 @@
 require 'helper'
 
 class TestCollection < Minitest::Test
-  MockDocument = Struct.new(:path, :site)
-  MockCollection = Struct.new(:label, :metadata, :docs)
-  def collection(label: '', metadata: {}, docs: [])
-    MockCollection.new(label, metadata, docs)
-  end
-
   attr_reader :site
   def setup
     @site = jekyll_site('_id' => 123)
@@ -31,8 +25,8 @@ class TestCollection < Minitest::Test
   def test_docs
     got = Jekyll::Siteleaf::Collection.new site,
       collection(docs: [
-        MockDocument.new('foo', site),
-        MockDocument.new('bar', site)
+        document(content: 'Bar', path: 'some/path/bar.md', extname: '.md'),
+        document(content: 'Foo', path: 'some/path/foo.md', extname: '.md')
       ])
 
     assert %w[foo bar], got.docs.map(&:path).map { |x| File.basename(x) }

@@ -24,6 +24,9 @@ class MockSite
   end
 end
 
+MockDocument = Struct.new(:content, :path, :extname, :data)
+MockCollection = Struct.new(:label, :metadata, :docs)
+
 class Minitest::Test
   def default_site_config(config = {})
     Jekyll::Configuration::DEFAULTS.merge(config)
@@ -31,5 +34,13 @@ class Minitest::Test
 
   def jekyll_site(config = {})
     Jekyll::Siteleaf::Site.new default_site_config(config)
+  end
+
+  def document(content: '', path: '', extname: '', data: {})
+    MockDocument.new(content, path, extname, data)
+  end
+
+  def collection(label: '', metadata: {}, docs: [])
+    MockCollection.new(label, metadata, docs)
   end
 end

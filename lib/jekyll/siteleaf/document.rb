@@ -3,12 +3,17 @@ module Jekyll
     class Document < Jekyll::Document
       extend Forwardable
       attr_reader :_document
-      def_delegators :@_document, :content, :extname, :data
+      def_delegators :@_document, :content, :extname
 
       def initialize(document, site:, collection:)
         @_document = document
         @site = site
         @collection = collection
+
+        @data = Utils.deep_merge_hashes(
+          site.frontmatter_defaults.all(url, collection.label.to_sym),
+          _document.data
+        )
       end
 
       def output_ext
