@@ -69,7 +69,7 @@ module Jekyll
       end
 
       def retrieve_data
-        site.data = DataReader.new(site).read(site.config['data_source'])
+        site.data = DataReader.new(site).read(site.config['data_dir'])
       end
 
       def retrieve_collections
