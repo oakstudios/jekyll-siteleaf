@@ -29,10 +29,20 @@ class TestCollection < Minitest::Test
         document(content: 'Foo', path: 'some/path/foo.md', extname: '.md')
       ])
 
-    assert %w[foo bar], got.docs.map(&:path).map { |x| File.basename(x) }
+    assert_equal %w[bar.md foo.md], got.docs.map(&:path).map { |x| File.basename(x) }
 
     got.docs.each do |doc|
       assert doc.is_a?(Jekyll::Siteleaf::Document)
     end
+  end
+
+  def test_files
+    got = Jekyll::Siteleaf::Collection.new site,
+      collection(files: [
+        MockStaticFile.new('some/path/bar.jpg'),
+        MockStaticFile.new('some/path/foo.gif')
+      ])
+
+    assert_equal %w[some/path/bar.jpg some/path/foo.gif], got.files.map(&:relative_path)
   end
 end

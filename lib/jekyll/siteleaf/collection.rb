@@ -21,6 +21,16 @@ module Jekyll
           Jekyll::Siteleaf::Document.new(doc, site: site, collection: self)
         end
       end
+
+      def files
+        @files ||= _collection.files.map do |file|
+          StaticFile.new site,
+            site.source,
+            File.dirname(file.path),
+            File.basename(file.path),
+            self
+        end
+      end
     end
   end
 end
