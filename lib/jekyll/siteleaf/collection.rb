@@ -5,8 +5,6 @@ module Jekyll
       attr_reader :_collection
       def_delegators :@_collection, :label, :metadata
 
-      # TODO: Delegate files to @_collection
-
       def initialize(site, _collection)
         @site = site
         @_collection = _collection
@@ -19,16 +17,12 @@ module Jekyll
       def docs
         @docs ||= _collection.docs.map do |doc|
           Jekyll::Siteleaf::Document.new(doc, site: site, collection: self)
-        end
+        end.sort # Jekyll sorts docs after reading, we do it too
       end
 
       def files
         @files ||= _collection.files.map do |file|
-          StaticFile.new site,
-            site.source,
-            File.dirname(file.path),
-            File.basename(file.path),
-            self
+          Jekyll::Siteleaf::StaticFile.new(file, site: site, collection: self)
         end
       end
     end

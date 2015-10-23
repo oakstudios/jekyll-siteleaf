@@ -61,7 +61,7 @@ module Jekyll
         # Files that don't have YAML frontmatter
         site.static_files =
           static_files.map do |path|
-            StaticFile.new site,
+            Jekyll::StaticFile.new site,
               site.source,
               File.dirname(path),
               File.basename(path)

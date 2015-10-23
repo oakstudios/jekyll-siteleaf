@@ -26,7 +26,7 @@ end
 
 MockDocument = Struct.new(:content, :path, :extname, :data)
 MockCollection = Struct.new(:label, :metadata, :docs, :files)
-MockStaticFile = Struct.new(:path)
+MockStaticFile = Struct.new(:filename)
 
 class Minitest::Test
   def default_site_config(config = {})

@@ -25,11 +25,16 @@ class TestCollection < Minitest::Test
   def test_docs
     got = Jekyll::Siteleaf::Collection.new site,
       collection(docs: [
+        document(content: 'Zoo', path: 'some/path/zoo.md', extname: '.md'),
         document(content: 'Bar', path: 'some/path/bar.md', extname: '.md'),
         document(content: 'Foo', path: 'some/path/foo.md', extname: '.md')
       ])
 
-    assert_equal %w[bar.md foo.md], got.docs.map(&:path).map { |x| File.basename(x) }
+    assert_equal %w[
+      bar.md
+      foo.md
+      zoo.md
+    ], got.docs.map(&:path).map { |x| File.basename(x) }
 
     got.docs.each do |doc|
       assert doc.is_a?(Jekyll::Siteleaf::Document)
@@ -39,10 +44,17 @@ class TestCollection < Minitest::Test
   def test_files
     got = Jekyll::Siteleaf::Collection.new site,
       collection(files: [
-        MockStaticFile.new('some/path/bar.jpg'),
-        MockStaticFile.new('some/path/foo.gif')
+        MockStaticFile.new('some/path/foo.gif'),
+        MockStaticFile.new('some/path/bar.jpg')
       ])
 
-    assert_equal %w[some/path/bar.jpg some/path/foo.gif], got.files.map(&:relative_path)
+    assert_equal %w[
+      some/path/foo.gif
+      some/path/bar.jpg
+    ], got.files.map(&:relative_path)
+
+    got.files.each do |file|
+      assert file.is_a?(Jekyll::Siteleaf::StaticFile)
+    end
   end
 end
