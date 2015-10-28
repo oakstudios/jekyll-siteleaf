@@ -25,9 +25,10 @@ class TestCollection < Minitest::Test
   def test_docs
     got = Jekyll::Siteleaf::Collection.new site,
       collection(docs: [
-        document(content: 'Zoo', path: 'some/path/zoo.md', extname: '.md'),
-        document(content: 'Bar', path: 'some/path/bar.md', extname: '.md'),
-        document(content: 'Foo', path: 'some/path/foo.md', extname: '.md')
+        document(content: 'Zoo', path: 'some/path/zoo.md'),
+        document(content: 'Bar', path: 'some/path/bar.md'),
+        document(content: 'Foo', path: 'some/path/foo.md'),
+        document(content: 'Ignore', path: 'some/path/ignore.md', data: { 'published' => false })
       ])
 
     assert_equal %w[

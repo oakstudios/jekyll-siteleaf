@@ -31,6 +31,7 @@ module Jekyll
           site.post_reader
               .call(site)
               .map { |x| Jekyll::Siteleaf::Post.new(site, x) }
+              .select { |x| site.publisher.publish?(x) }
       end
 
       def retrieve_drafts
@@ -38,23 +39,26 @@ module Jekyll
           site.draft_reader
               .call(site)
               .map { |x| Jekyll::Siteleaf::Draft.new(site, x) }
+              .select { |x| site.publisher.publish?(x) }
       end
 
       def retrieve_pages
-        site.pages =
+        pages =
           site.page_reader
               .call(site)
               .map { |x| Jekyll::Siteleaf::Page.new(site, x) }
 
+
         # Include static files with yaml frontmatter
-        site.pages +=
+        pages +=
           yaml_static_files.map do |path|
-            page = Jekyll::Page.new site,
+            Jekyll::Page.new site,
               site.source,
               File.dirname(path),
               File.basename(path)
-            page if site.publisher.publish?(page)
-          end.compact
+          end
+
+        site.pages = pages.select { |x| site.publisher.publish?(x) }
       end
 
       def retrieve_static_files

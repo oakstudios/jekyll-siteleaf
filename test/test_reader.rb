@@ -18,11 +18,20 @@ class TestReader < Minitest::Test
     collection = MockCollection.new('foo', [])
 
     site.post_reader = Minitest::Mock.new
-    site.post_reader.expect :call, [], [reader.site]
+    site.post_reader.expect :call, [
+      postable(name: '2015-06-15-foo-bar.md', data: { 'published' => false }),
+      postable(name: '2015-06-15-example.md'),
+      postable(name: '3000-06-15-a-long-long-time.md')
+    ], [reader.site]
     site.draft_reader = Minitest::Mock.new
-    site.draft_reader.expect :call, [], [reader.site]
+    site.draft_reader.expect :call, [
+      postable(name: 'first-draft.md', data: { 'date' => Time.now }),
+      postable(name: 'second-draft.md', data: { 'published' => false })
+    ], [reader.site]
     site.page_reader = Minitest::Mock.new
-    site.page_reader.expect :call, [], [reader.site]
+    site.page_reader.expect :call, [
+      page(name: 'foobar.md', data: { 'published' => false })
+    ], [reader.site]
     site.collection_reader = Minitest::Mock.new
     site.collection_reader.expect :call, [collection], [reader.site]
 
@@ -38,6 +47,11 @@ class TestReader < Minitest::Test
       contacts/bar.html
       css/main.scss
     ], site.pages.map(&:relative_path)
+
+    assert_equal %w[
+      _posts/2015-06-15-example.md
+      _drafts/first-draft.md
+    ], site.posts.map(&:relative_path)
 
     assert site.collections.key?('foo')
 
@@ -56,6 +70,7 @@ class TestReader < Minitest::Test
 
   def test_page_static_files
     assert_equal %w[
+      about.md
       contacts/bar.html
       css/main.scss
       .htaccess

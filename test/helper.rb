@@ -27,6 +27,8 @@ end
 MockDocument = Struct.new(:content, :path, :extname, :data)
 MockCollection = Struct.new(:label, :metadata, :docs, :files)
 MockStaticFile = Struct.new(:filename)
+MockPostable = Struct.new(:name, :content, :data)
+MockPage = Struct.new(:name, :content, :data, :source_dir)
 
 class Minitest::Test
   def default_site_config(config = {})
@@ -43,5 +45,13 @@ class Minitest::Test
 
   def collection(label: '', metadata: {}, docs: [], files: [])
     MockCollection.new(label, metadata, docs, files)
+  end
+
+  def postable(name: '', content: '', data: {})
+    MockPostable.new(name, content, data)
+  end
+
+  def page(name: '', content: '', data: {}, source_dir: '')
+    MockPage.new(name, content, data, source_dir)
   end
 end

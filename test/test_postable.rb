@@ -1,9 +1,6 @@
-module TestPostable
-  MockPostable = Struct.new(:name, :content, :data)
-  def postable(name: '', content: '', data: {})
-    MockPostable.new(name, content, data)
-  end
+require_relative 'helper'
 
+module TestPostable
   attr_reader :site
   def setup
     @site = jekyll_site(

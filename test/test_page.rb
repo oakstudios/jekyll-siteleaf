@@ -1,11 +1,6 @@
 require 'helper'
 
 class TestPage < Minitest::Test
-  MockPage = Struct.new(:name, :content, :data, :source_dir)
-  def page(name: '', content: '', data: {}, source_dir: '')
-    MockPage.new(name, content, data, source_dir)
-  end
-
   attr_reader :site
   def setup
     @site = jekyll_site(

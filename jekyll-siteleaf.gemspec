@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ['larry@oakmade.com']
   gem.summary       = 'Jekyll Siteleaf bridge'
 
-  gem.required_ruby_version = '>= 2.0'
+  gem.required_ruby_version = '>= 2.2'
 
   gem.add_dependency 'jekyll', '3.0.0.pre.beta10'
 
