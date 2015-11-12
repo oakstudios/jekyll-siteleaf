@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 2.2'
 
-  gem.add_dependency 'jekyll', '3.0.0.pre.beta10'
+  gem.add_dependency 'jekyll', '3.0.0'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'pry'

@@ -1,97 +1,77 @@
 module Jekyll
   module Siteleaf
-    class Reader < Jekyll::Reader
+    class Reader
+      using Siteleaf # Enable refinements
+
+      attr_reader :site, :store, :keys
+
+      def initialize(site, store)
+        @site = site
+        @store = store
+        @keys = store.keys
+      end
+
       def read
-        retrieve_layouts
-        retrieve_posts
-        retrieve_drafts if site.show_drafts
-        retrieve_pages
-        retrieve_static_files
-        sort_files!
-        retrieve_data
-        retrieve_collections
+        site.layouts = LayoutReader.new(site).read
+        site.posts.docs.concat(read_posts)
+        site.posts.docs.concat(read_drafts) if site.show_drafts
+        site.pages.concat(read_pages)
+        site.static_files.concat(read_static_files)
       end
 
-      def static_files
-        @static_files || parse_source_files.last
-      end
-
-      def yaml_static_files
-        @yaml_static_files || parse_source_files.first
+      # For Jekyll compatablitiy
+      def get_entries(base, dir)
+        base.empty? && base = nil
+        path = File.join(*[base, dir].compact).sub(/\/?\z/, '/'.freeze)
+        filtered_keys.select { |key| key.start_with?(path) }
       end
 
       private
 
-      def retrieve_layouts
-        site.layouts = LayoutReader.new(site).read
+      def filtered_keys
+        @filtered_keys ||= EntryFilter.new(site, nil).path_filter(keys)
       end
 
-      def retrieve_posts
-        site.posts =
-          site.post_reader
-              .call(site)
-              .map { |x| Jekyll::Siteleaf::Post.new(site, x) }
-              .select { |x| site.publisher.publish?(x) }
+      def filtered_entries(entries)
+        Jekyll::EntryFilter.new(site, nil).path_filter(entries)
       end
 
-      def retrieve_drafts
-        site.posts +=
-          site.draft_reader
-              .call(site)
-              .map { |x| Jekyll::Siteleaf::Draft.new(site, x) }
-              .select { |x| site.publisher.publish?(x) }
+      def read_posts
+        read_publishable('_posts', Document::DATE_FILENAME_MATCHER)
       end
 
-      def retrieve_pages
-        pages =
-          site.page_reader
-              .call(site)
-              .map { |x| Jekyll::Siteleaf::Page.new(site, x) }
-
-
-        # Include static files with yaml frontmatter
-        pages +=
-          yaml_static_files.map do |path|
-            Jekyll::Page.new site,
-              site.source,
-              File.dirname(path),
-              File.basename(path)
-          end
-
-        site.pages = pages.select { |x| site.publisher.publish?(x) }
+      def read_drafts
+        read_publishable('_drafts', Document::DATELESS_FILENAME_MATCHER)
       end
 
-      def retrieve_static_files
-        # Files that don't have YAML frontmatter
-        site.static_files =
-          static_files.map do |path|
-            Jekyll::StaticFile.new site,
-              site.source,
-              File.dirname(path),
-              File.basename(path)
+      def read_publishable(dir, matcher)
+        keys.select { |x| x =~ %r{(\A|/)#{dir}/} }
+          .each_with_object([]) do |path, acc|
+            next unless path =~ matcher
+            doc = Document.new(site.in_source_dir(path), site: site, collection: site.posts)
+            doc.read_with(self)
+            acc << doc if site.publisher.publish?(doc)
           end
       end
 
-      def retrieve_data
-        site.data = DataReader.new(site).read(site.config['data_dir'])
+      def read_pages
+        filtered_keys.each_with_object([]) do |path, acc|
+          page = Page.new(*_args(path))
+          acc << page if site.publisher.publish?(page)
+        end
       end
 
-      def retrieve_collections
-        site.collections =
-          site.collection_reader
-              .call(site)
-              .map { |x| Jekyll::Siteleaf::Collection.new(site, x) }
-              .each_with_object({}) { |c, h| h[c.label] = c }
-      end
-
-      def parse_source_files
+      def read_static_files
         Dir.chdir(site.in_source_dir) do
           files = Dir.glob('**/{*,.*}').reject { |f| File.directory?(f) }
-          @yaml_static_files, @static_files =
-            filter_entries(files).partition do |file|
-              Utils.has_yaml_header?(file)
-            end
+          filtered_entries(files).map do |path|
+            StaticFile.new(*_args(path))
+          end
         end
+      end
+
+      def _args(path)
+        [site, site.source, File.dirname(path), File.basename(path)]
       end
     end
   end

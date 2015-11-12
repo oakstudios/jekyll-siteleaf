@@ -1,10 +1,7 @@
 require 'jekyll'
-require 'jekyll/siteleaf/site'
-require 'jekyll/siteleaf/postable'
-require 'jekyll/siteleaf/post'
-require 'jekyll/siteleaf/draft'
+
+require 'jekyll/siteleaf/refinements/document'
+require 'jekyll/siteleaf/refinements/entry_filter'
+
 require 'jekyll/siteleaf/page'
 require 'jekyll/siteleaf/reader'
-require 'jekyll/siteleaf/collection'
-require 'jekyll/siteleaf/document'
-require 'jekyll/siteleaf/static_file'

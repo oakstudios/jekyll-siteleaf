@@ -1,35 +1,19 @@
+# Page is not a refinment because read_yaml is called 
+# within Page#initialize and is not refined in that context
 module Jekyll
   module Siteleaf
     class Page < Jekyll::Page
-      # Page can be any file with YAML front matter
-      extend Forwardable
-      attr_reader :_page
-      def_delegators :@_page, :name, :source_dir
-
-      def initialize(site, _page)
-        @site = site
-        @_page = _page
-
-        # NOTE: The instance variable @dir and method dir are two different
-        # things in Jekyll :shrug: So we have to set it here.
-        # BUT: Page#dir does depend on @dir via Page#url and Page#url_placeholders
-        @dir = source_dir
-
-        process @name = name
-
-        data.default_proc = proc do |_, key|
-          site.frontmatter_defaults.find(File.join(@dir, name), type, key)
-        end
-
-        Jekyll::Hooks.trigger self, :post_init
+      def read_yaml(_, _, _ = {})
+        read_with(site.reader)
       end
 
-      def data
-        @data ||= @_page.data.dup
-      end
+      def read_with(reader)
+        Jekyll.logger.debug "Reading:", relative_path
 
-      def content
-        @content ||= @_page.content.dup
+        # Some page paths start with `./` 
+        # While valid on disk, we're not using filenames like that
+        self.content, self.data = 
+          reader.store.fetch(relative_path.sub(/\A.\//, ''))
       end
     end
   end
