@@ -19,6 +19,7 @@ module Jekyll
         site.static_files.concat(read_static_files)
         sort_files!
         site.data = DataReader.new(site).read(site.config['data_dir'])
+        read_collections
       end
 
       # For Jekyll compatablitiy
@@ -39,18 +40,18 @@ module Jekyll
       end
 
       def read_posts
-        read_publishable('_posts', Document::DATE_FILENAME_MATCHER)
+        read_publishable('_posts', site.posts, Document::DATE_FILENAME_MATCHER)
       end
 
       def read_drafts
-        read_publishable('_drafts', Document::DATELESS_FILENAME_MATCHER)
+        read_publishable('_drafts', site.posts, Document::DATELESS_FILENAME_MATCHER)
       end
 
-      def read_publishable(dir, matcher)
+      def read_publishable(dir, col, matcher = //)
         keys.select { |x| x =~ %r{(\A|/)#{dir}/} }
           .each_with_object([]) do |path, acc|
             next unless path =~ matcher
-            doc = Document.new(site.in_source_dir(path), site: site, collection: site.posts)
+            doc = Document.new(site.in_source_dir(path), site: site, collection: col)
             doc.read_with(self)
             acc << doc if site.publisher.publish?(doc)
           end
@@ -69,6 +70,16 @@ module Jekyll
           filtered_entries(files).map do |path|
             StaticFile.new(*_args(path))
           end
+        end
+      end
+
+      def read_collections
+        CollectionReader.new(site).read
+
+        site.collections.values.each do |collection|
+          next if CollectionReader::SPECIAL_COLLECTIONS.include?(collection.label)
+          collection.docs.concat(read_publishable(collection.relative_directory, collection))
+          collection.docs.sort!
         end
       end
 

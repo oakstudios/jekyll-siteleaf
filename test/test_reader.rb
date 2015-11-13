@@ -17,7 +17,10 @@ class TestReader < Minitest::Test
     'about/bar.md' => ['',{ 'published' => false }],
     'about/_ignored.md' => ['',{}],
     'about/_ignored/file.md' => ['',{}],
-    '.dotfiles/hidden' => ['',{}]
+    '.dotfiles/hidden' => ['',{}],
+    '_my_collection/doc-b.md' => ['',{}],
+    '_my_collection/doc-a.md' => ['',{}],
+    '_static_collection/not-read.md' => ['',{}]
   }.freeze
 
   def jekyll_site(config = {})
@@ -28,7 +31,8 @@ class TestReader < Minitest::Test
     @site = jekyll_site(
       'source' => SOURCE,
       'skip_config_files' => true,
-      'data_dir' => '_my_data'
+      'data_dir' => '_my_data',
+      'collections' => %w[my_collection]
     )
     @site.reader = @reader = Jekyll::Siteleaf::Reader.new(@site, STORE)
   end
@@ -108,5 +112,22 @@ class TestReader < Minitest::Test
       java
       ruby
     ], @site.data['languages']
+  end
+
+  def test_read__collection_docs
+    @reader.read
+
+    assert_equal %w[
+      _my_collection/doc-a.md
+      _my_collection/doc-b.md
+    ], @site.collections['my_collection'].docs.map(&:relative_path)
+  end
+
+  def test_read__collection_files
+    @reader.read
+
+    assert_equal %w[
+      _my_collection/static_file.txt
+    ], @site.collections['my_collection'].files.map(&:relative_path)
   end
 end
