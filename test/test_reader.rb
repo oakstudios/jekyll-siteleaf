@@ -26,8 +26,9 @@ class TestReader < Minitest::Test
 
   def setup
     @site = jekyll_site(
-      'source' => SOURCE, 
-      'skip_config_files' => true
+      'source' => SOURCE,
+      'skip_config_files' => true,
+      'data_dir' => '_my_data'
     )
     @site.reader = @reader = Jekyll::Siteleaf::Reader.new(@site, STORE)
   end
@@ -74,7 +75,7 @@ class TestReader < Minitest::Test
       category/_drafts/cat-draft.md
     ], @site.posts.docs.map(&:relative_path)
   end
-  
+
   def test_read__pages
     @reader.read
 
@@ -84,14 +85,28 @@ class TestReader < Minitest::Test
       about/foo.md
     ], @site.pages.map(&:relative_path)
   end
-  
+
   def test_read__static_files
     @reader.read
 
     assert_equal %w[
-      css/screen.css
       ./README
+      css/screen.css
       static/file.html
     ], @site.static_files.map(&:relative_path)
+  end
+
+  def test_read__data
+    @reader.read
+
+    assert_equal [
+      { "name" => "Jack", "age" => 27, "blog" => "http://example.com/jack" },
+      { "name" => "John", "age" => 32, "blog" => "http://example.com/john" }
+    ], @site.data['members']
+
+    assert_equal %w[
+      java
+      ruby
+    ], @site.data['languages']
   end
 end

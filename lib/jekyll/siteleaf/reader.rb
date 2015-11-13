@@ -1,6 +1,6 @@
 module Jekyll
   module Siteleaf
-    class Reader
+    class Reader < Jekyll::Reader
       using Siteleaf # Enable refinements
 
       attr_reader :site, :store, :keys
@@ -17,6 +17,8 @@ module Jekyll
         site.posts.docs.concat(read_drafts) if site.show_drafts
         site.pages.concat(read_pages)
         site.static_files.concat(read_static_files)
+        sort_files!
+        site.data = DataReader.new(site).read(site.config['data_dir'])
       end
 
       # For Jekyll compatablitiy
