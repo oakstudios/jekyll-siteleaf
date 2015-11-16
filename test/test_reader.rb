@@ -1,8 +1,6 @@
 require 'helper'
 
 class TestReader < Minitest::Test
-  SOURCE =  File.expand_path('./source', File.dirname(__FILE__))
-
   STORE = {
     '_posts/2015-06-15-example.md' => ['',{}],
     'category/_posts/2015-06-16-category.md' => ['',{}],
@@ -23,10 +21,6 @@ class TestReader < Minitest::Test
     '_static_collection/not-read.md' => ['',{}]
   }.freeze
 
-  def jekyll_site(config = {})
-    Jekyll::Site.new(Jekyll.configuration(config))
-  end
-
   def setup
     @site = jekyll_site(
       'source' => SOURCE,
@@ -43,6 +37,8 @@ class TestReader < Minitest::Test
       about/bar.md
     ], @reader.get_entries('', 'about')
   end
+
+  link = '/foobar/post/derp/1232'.split('/post/')[1].split('/')[0]
 
   def test_read__layouts
     @reader.read
