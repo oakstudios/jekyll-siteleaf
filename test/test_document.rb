@@ -14,7 +14,18 @@ class TestDocument < Minitest::Test
     @site = jekyll_site(
       'source' => SOURCE,
       'skip_config_files' => true,
-      'collections' => %w[foobar]
+      'collections' => %w[foobar],
+      'defaults' => [
+        {
+          'scope' => {
+            'path' => '',
+            'type' => 'foobar'
+          },
+          'values' => {
+            'a_default' => 'test'
+          }
+        }
+      ]
     )
     @reader = Jekyll::Siteleaf::Reader.new(@site, store)
     @doc = Jekyll::Document.new(
@@ -34,6 +45,10 @@ class TestDocument < Minitest::Test
     assert_equal 'Document Content', @doc.content
     assert_equal 'doc', @doc.data['layout']
     assert_equal 'Jekyll & Hyde', @doc.data['author']
+
+    # Using merge to get the actual key/values that exist in `data`
+    # and bypass the default_proc that Jekyll uses to lookup defaults
+    assert_equal 'test', {}.merge(@doc.data)['a_default']
   end
 
   def test_read_with__post
