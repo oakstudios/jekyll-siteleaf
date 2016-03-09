@@ -3,7 +3,8 @@ require 'helper'
 class TestPage < Minitest::Test
   def store
     {
-      'foobar/about.md' => ['My Content', { 'layout' => 'page', 'author' => 'Jekyll & Hyde' }]
+      'foobar/about.md' => ['My Content', { 'layout' => 'page', 'author' => 'Jekyll & Hyde' }],
+      'a/foo.md' => ['single char parent', {}]
     }
   end
 
@@ -18,6 +19,11 @@ class TestPage < Minitest::Test
     assert_equal 'My Content', @page.content
     assert_equal 'page', @page.data['layout']
     assert_equal 'Jekyll & Hyde', @page.data['author']
+  end
+
+  def test_read_with__single_char_parent
+    @page = Jekyll::Siteleaf::Page.new(@site, @site.source, 'a', 'foo.md')
+    assert_equal 'single char parent', @page.content
   end
 
   def test_read_yaml
