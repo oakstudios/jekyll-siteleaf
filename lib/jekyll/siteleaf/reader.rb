@@ -13,6 +13,7 @@ module Jekyll
 
       def read
         site.layouts = LayoutReader.new(site).read
+        site.layouts.merge!(read_layouts)
         site.posts.docs.concat(read_posts)
         site.posts.docs.concat(read_drafts) if site.show_drafts
         site.pages.concat(read_pages)
@@ -81,6 +82,20 @@ module Jekyll
           collection.docs.concat(read_publishable(collection.relative_directory, collection))
           collection.docs.sort!
         end
+      end
+
+      def read_layouts
+        layouts_dir = site.config['layouts_dir'].sub(/\/?\z/, '/')
+
+        keys.select { |path| path.start_with?(layouts_dir) }
+          .map { |path| path.sub(layouts_dir, '') }
+          .each_with_object({}) do |path, layouts|
+            layouts[layout_name(path)] = Layout.new(site, layouts_dir, path)
+          end
+      end
+
+      def layout_name(file)
+        file.split(".")[0..-2].join(".")
       end
 
       def _args(path)

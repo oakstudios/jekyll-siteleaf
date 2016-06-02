@@ -18,7 +18,8 @@ class TestReader < Minitest::Test
     '.dotfiles/hidden' => ['',{}],
     '_my_collection/doc-b.md' => ['',{}],
     '_my_collection/doc-a.md' => ['',{}],
-    '_static_collection/not-read.md' => ['',{}]
+    '_static_collection/not-read.md' => ['',{}],
+    '_layouts/page.md' => ['',{}]
   }.freeze
 
   def setup
@@ -42,7 +43,7 @@ class TestReader < Minitest::Test
 
   def test_read__layouts
     @reader.read
-    assert_equal %w[default post], @site.layouts.keys
+    assert_equal %w[default post page], @site.layouts.keys
   end
 
   def test_read__posts

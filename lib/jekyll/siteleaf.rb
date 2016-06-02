@@ -5,3 +5,4 @@ require 'jekyll/siteleaf/refinements/entry_filter'
 
 require 'jekyll/siteleaf/page'
 require 'jekyll/siteleaf/reader'
+require 'jekyll/siteleaf/layout'
