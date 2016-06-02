@@ -39,8 +39,6 @@ class TestReader < Minitest::Test
     ], @reader.get_entries('', 'about')
   end
 
-  link = '/foobar/post/derp/1232'.split('/post/')[1].split('/')[0]
-
   def test_read__layouts
     @reader.read
     assert_equal %w[default post page], @site.layouts.keys
