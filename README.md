@@ -30,3 +30,10 @@ store = {
 ~~~
 
 Where the key is a "filename" and the value is an array of content and frontmatter.
+
+
+### Running tests
+
+```
+bundle exec rake test
+```

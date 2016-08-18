@@ -1,5 +1,5 @@
 module Jekyll
   module Siteleaf
-    VERSION = '0.0.14'
+    VERSION = '0.0.20'
   end
 end
