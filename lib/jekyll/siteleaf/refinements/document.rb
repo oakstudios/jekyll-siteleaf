@@ -10,7 +10,7 @@ module Jekyll
 
         self.content, data = reader.store.fetch(relative_path)
         merge_data!(data)
-        post_read
+        read_post_data
       end
     end
   end
