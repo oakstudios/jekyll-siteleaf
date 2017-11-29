@@ -12,11 +12,11 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 2.2'
 
-  gem.add_dependency 'jekyll', '3.6.0'
+  gem.add_dependency 'jekyll', '3.6.2'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'pry'
-  gem.add_development_dependency 'minitest', '~> 5.5.1'
+  gem.add_development_dependency 'minitest', '~> 5.8.4'
 
   gem.files         += Dir.glob('lib/**/*.rb')
   gem.test_files    = Dir.glob('test/**/*')
