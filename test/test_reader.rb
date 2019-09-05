@@ -41,7 +41,7 @@ class TestReader < Minitest::Test
 
   def test_read__layouts
     @reader.read
-    assert_equal %w[default post page], @site.layouts.keys
+    assert_equal %w[default post page].sort, @site.layouts.keys.sort
   end
 
   def test_read__posts
